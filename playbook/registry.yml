@@ -1,0 +1,29 @@
+- name: registry
+  hosts: coreos-instance
+  tasks:
+    - name: Start etcd
+      service: name=etcd.service state=started
+      sudo: true
+
+    - name: Install docker-py
+      pip: name=docker-py
+
+    - name: application container
+      docker:
+        name: local_repository
+        image: registry
+        state: reloaded
+        pull: always
+        volumes: /home/core/registry:/tmp/registry
+        ports:
+          - "5000:5000"
+
+    - name: Sync units
+      sudo: true
+      copy: 
+           src: ../units/
+           dest: /etc/systemd/system
+           owner: core
+
+    - command: sudo systemctl enable /etc/systemd/system/local_repository.service
+        

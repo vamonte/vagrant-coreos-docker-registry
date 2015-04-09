@@ -1,0 +1,4 @@
+coreos_box:
+  forwarded_ports:
+    - guest: 5000
+      host: 5000
