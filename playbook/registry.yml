@@ -13,10 +13,22 @@
         name: local_repository
         image: registry
         state: reloaded
-        pull: always
+        pull: missing
         volumes: /home/core/registry:/tmp/registry
         ports:
           - "5000:5000"
+
+    - name: Pull and run konradkleine/docker-registry-frontend
+      docker:
+        name: repository_ui
+        image: konradkleine/docker-registry-frontend
+        pull: missing
+        state: reloaded
+        env:
+           ENV_DOCKER_REGISTRY_HOST: localhost
+           ENV_DOCKER_REGISTRY_PORT: 5000
+        ports:
+          - "8081:80"
 
     - name: Sync units
       sudo: true
@@ -25,5 +37,11 @@
            dest: /etc/systemd/system
            owner: core
 
-    - command: sudo systemctl enable /etc/systemd/system/local_repository.service
+    - name: Enable repository_ui unit
+      sudo: true
+      command: systemctl enable /etc/systemd/system/repository_ui.service
+
+    - name: Enable local_repository unit
+      sudo: true
+      command: systemctl enable /etc/systemd/system/local_repository.service
         
