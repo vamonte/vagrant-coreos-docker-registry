@@ -8,7 +8,7 @@
     - name: Install docker-py
       pip: name=docker-py
 
-    - name: application container
+    - name: Pull and run registry
       docker:
         name: local_repository
         image: registry
