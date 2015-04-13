@@ -38,3 +38,27 @@ Easiest way to have your own docker registry with its UI.
  docker push 172.12.8.100:5000/local_busybox
  ```
  
+ ## Allowing insecure registry endpoint
+
+You may have some error as:
+```
+FATA[0004] Error: v1 ping attempt failed with error: Get https://172.12.8.100:5000/v1/_ping: EOF. If this private registry supports only HTTP or HTTPS with an unknown CA certificate, please add `--insecure-registry 172.12.8.100:5000` to the daemon's arguments. In the case of HTTPS, if you have access to the registry's CA certificate, no need for the flag; simply place the CA certificate at /etc/docker/certs.d/172.12.8.100:5000/ca.crt
+```
+- Linux docker users: 
+Open /etc/docker/default and add the following at the end:
+
+```
+EXTRA_ARGS="--insecure-registry 172.12.0.0/16"
+```
+
+- Boot2docker users:
+
+```
+boot2docker ssh
+sudo vi /var/lib/boot2docker/profile
+```
+
+Add the following at the end of the file and restart boot2docker:
+```
+EXTRA_ARGS="--insecure-registry 172.12.0.0/16"
+```
